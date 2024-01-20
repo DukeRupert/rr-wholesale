@@ -1,3 +1,7 @@
 [submodule "server"]
 	path = server
 	url = https://github.com/DukeRupert/rr-wholesale-server.git
+
+[submodule "client"]
+	path = client
+	url = https://github.com/DukeRupert/rr-wholesale-frontend.git
