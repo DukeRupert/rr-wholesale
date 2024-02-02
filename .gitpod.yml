@@ -1,34 +1,45 @@
 # Image of workspace. Learn more: https://www.gitpod.io/docs/configure/workspaces/workspace-image
 image: gitpod/workspace-postgres:2024-01-17-14-14-06
 
-# Install Redis.
-# RUN sudo apt-get update \
-#  && sudo apt-get install -y \
-#   redis-server \
-#  && sudo rm -rf /var/lib/apt/lists/*
-
 # List the start up tasks. Learn more: https://www.gitpod.io/docs/configure/workspaces/tasks
 tasks:
-  - name : Startup
-    before: sudo apt-get update && sudo apt-get install -y redis-server && sudo rm -rf /var/lib/apt/lists/*
-    command: |
+  - name : postgreSQL
+    command: | 
       pg_start
+  - name : redis
+    openMode: tab-after
+    before: | 
+      sudo apt-get update && sudo apt-get install -y redis-server && sudo rm -rf /var/lib/apt/lists/*
+    command: | 
       redis-server
-  - name: backend
-      # change working directory as per configured in `checkoutLocation`
-      # which is configured above as `/workspaces/backend`
+  - name: server
+    openMode: tab-after
     before: |
-          cd ../server
+      cd ./server
     init: |
-          yarn install
+      yarn install
+    command: |
+      yarn start
   - name: frontend
-      # change working directory as per configured in `checkoutLocation`
-      # which is configured above as `/workspaces/backend`
+    openMode: tab-after
     before: |
-          cd ../client
+      cd ./client
     init: |
-          pnpm install
+      pnpm install
+    command: |
+      pnpm dev
 
 # List the ports to expose. Learn more: https://www.gitpod.io/docs/configure/workspaces/ports
+ports:
+    - name: server
+      description: MedusaJS Admin GUI
+      port: 9000
+      onOpen: open-browser
+      visibility: public
+    - name: client
+      description: Customer Website
+      port: 5173
+      onOpen: open-browser
+      visibility: public
 
 # Learn more from ready-to-use templates: https://www.gitpod.io/docs/introduction/getting-started/quickstart
