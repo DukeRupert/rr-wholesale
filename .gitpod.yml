@@ -9,10 +9,25 @@ image: gitpod/workspace-postgres:2024-01-17-14-14-06
 
 # List the start up tasks. Learn more: https://www.gitpod.io/docs/configure/workspaces/tasks
 tasks:
-  - name: Startup
+  - name : Startup
+    before: sudo apt-get update && sudo apt-get install -y redis-server && sudo rm -rf /var/lib/apt/lists/*
     command: |
       pg_start
       redis-server
+  - name: backend
+      # change working directory as per configured in `checkoutLocation`
+      # which is configured above as `/workspaces/backend`
+    before: |
+          cd ../server
+    init: |
+          yarn install
+  - name: frontend
+      # change working directory as per configured in `checkoutLocation`
+      # which is configured above as `/workspaces/backend`
+    before: |
+          cd ../client
+    init: |
+          pnpm install
 
 # List the ports to expose. Learn more: https://www.gitpod.io/docs/configure/workspaces/ports
 
